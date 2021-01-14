@@ -6,50 +6,7 @@
  * @license MIT
 */
 
-var exec = require('cordova/exec');
-
-var safe = {
-  /**
-   * encrypt
-   *
-   * @param {String} path File URI
-   * @param {String} password Password for encryption
-   * @param {Function} success Success callback
-   * @param {Function} error Failure callback
-   * @returns {void}
-   */
-  encrypt: function(path, password, success, error) {
-    var encryptSuccess, encryptError;
-
-    if (!path || arguments.length === 0) return;
-
-    encryptSuccess = onSuccess.bind(null, success);
-    encryptError = onError.bind(null, error);
-
-    exec(encryptSuccess, encryptError, 'Safe', 'encrypt', [path, password]);
-  },
-
-  /**
-   * decrypt
-   *
-   * @param {String} path File URI
-   * @param {String} password Password for decryption
-   * @param {Function} success Success callback
-   * @param {Function} error Failure callback
-   * @returns {void}
-   */
-  decrypt: function(path, password, success, error) {
-    var decryptSuccess, decryptError;
-
-    if (!path || arguments.length === 0) return;
-
-    decryptSuccess = onSuccess.bind(null, success);
-    decryptError = onError.bind(null, error);
-
-    exec(decryptSuccess, decryptError, 'Safe', 'decrypt', [path, password]);
-  }
-
-};
+var exec = cordova.require('cordova/exec');
 
 /**
  * onSuccess
@@ -82,4 +39,42 @@ function onError(error, code) {
   return code;
 }
 
-exports.safe = safe;
+
+var EncryptionPlugin = function() {
+  console.log('EncryptionPlugin instanced');
+};
+
+EncryptionPlugin.prototype.encrypt = function(path, password, onSuccess, onError) {
+
+  if (!path || arguments.length === 0) return;
+  var errorCallback = function(obj) {
+      onError(obj);
+  };
+
+  var successCallback = function(obj) {
+      onSuccess(obj);
+  };
+
+  // exec(successCallback, errorCallback, 'AndroidToast', 'show', [msg]);
+  exec(successCallback, errorCallback, 'Safe', 'encrypt', [path, password]);
+};
+
+EncryptionPlugin.prototype.decrypt = function(path, password, onSuccess, onError) {
+
+  if (!path || arguments.length === 0) return;
+  var errorCallback = function(obj) {
+      onError(obj);
+  };
+
+  var successCallback = function(obj) {
+      onSuccess(obj);
+  };
+
+  // exec(successCallback, errorCallback, 'AndroidToast', 'show', [msg]);
+
+  exec(successCallback, errorCallback, 'Safe', 'decrypt', [path, password]);
+};
+
+if (typeof module != 'undefined' && module.exports) {
+  module.exports = EncryptionPlugin;
+}
