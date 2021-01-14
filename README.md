@@ -6,7 +6,7 @@ cordova-safe
 ## Install
 
 ```bash
-$ cordova plugin add cordova-pug
+$ cordova plugin add https://github.com/deokudev/cordova-plugin-encryption.git
 ```
 
 ## Usage
